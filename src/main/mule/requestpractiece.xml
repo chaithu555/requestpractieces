@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="3dcbcbd0-75d2-47ce-a0ab-53959b28f9ba" >
+		<http:request-connection protocol="HTTPS" host="worldtimeapi.org" />
+	</http:request-config>
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="7cbefae3-c7f9-4eb3-8bf1-617a60ad27d6" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<flow name="requestpFlow" doc:id="b756ff75-d750-4322-acc9-342a09cc8f19" >
+		<http:listener doc:name="Listener" doc:id="940ad22c-ec0e-47d8-a292-53acaf7f204b" config-ref="HTTP_Listener_config" path="requestP" />
+		<http:request method="GET" doc:name="Request" doc:id="5b530944-5aea-454e-8b2d-c7403538e107" config-ref="HTTP_Request_configuration" path="/api/timezone/Asia/Kolkata" />
+		<ee:transform doc:name="Transform Message" doc:id="f253c1dd-babd-43c5-b291-a8f545d7284c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
